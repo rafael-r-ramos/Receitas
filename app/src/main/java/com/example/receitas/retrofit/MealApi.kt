@@ -1,6 +1,7 @@
 package com.example.receitas.retrofit
 
-import com.example.receitas.models.CateogryList
+import com.example.receitas.models.CategoryList
+import com.example.receitas.models.MealsByCategoryList
 import com.example.receitas.models.MealList
 import retrofit2.Call
 import retrofit2.http.GET
@@ -16,6 +17,12 @@ interface MealApi {
     fun getMealDetails(@Query("i") id:String) : Call<MealList>
 
     @GET("filter.php?")
-    fun getPopularItems(@Query("c")categoryName: String) : Call<CateogryList>
+    fun getPopularItems(@Query("c")categoryName: String) : Call<MealsByCategoryList>
+
+    @GET("categories.php")
+    fun getCategories() : Call<CategoryList>
+
+    @GET("filter.php")
+    fun getMealsByCategory(@Query("c")categoryName: String) : Call<MealsByCategoryList>
 
 }
