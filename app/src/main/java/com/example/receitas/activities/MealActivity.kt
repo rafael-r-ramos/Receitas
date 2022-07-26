@@ -5,14 +5,18 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.example.receitas.R
 import com.example.receitas.databinding.ActivityMealBinding
+import com.example.receitas.db.MealDatabase
 import com.example.receitas.fragments.HomeFragment
 import com.example.receitas.models.Meal
 import com.example.receitas.viewModel.MealViewModel
+import com.example.receitas.viewModel.MealViewModelFactory
 
 class MealActivity : AppCompatActivity() {
     private lateinit var mealId: String
@@ -27,7 +31,9 @@ class MealActivity : AppCompatActivity() {
         binding= ActivityMealBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mealMvvm = ViewModelProviders.of(this)[MealViewModel::class.java]
+        val mealDatabase = MealDatabase.getInstance(this)
+        val viewModelFactory = MealViewModelFactory(mealDatabase)
+        mealMvvm = ViewModelProvider(this,viewModelFactory)[MealViewModel::class.java]
 
         getMealInformationFromIntent()
         setInformationInViews()
@@ -37,7 +43,17 @@ class MealActivity : AppCompatActivity() {
         observeMealDetailsLiveData()
 
         onYoutubeImageClick()
+        onFavoriteClick()
 
+    }
+
+    private fun onFavoriteClick() {
+        binding.btnAddToFavorites.setOnClickListener {
+            mealToSave?.let { 
+                mealMvvm.insertMeal(it)
+                Toast.makeText(this, "Receita Salva", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun onYoutubeImageClick() {
@@ -47,11 +63,13 @@ class MealActivity : AppCompatActivity() {
         }
     }
 
+    private var mealToSave: Meal?=null
     private fun observeMealDetailsLiveData() {
         mealMvvm.observerMealDetailLiveData().observe(this,object : Observer<Meal>{
             override fun onChanged(t: Meal?) {
                 onResponseCase()
                 val meal = t
+                mealToSave = meal
 
                 binding.tvCategory.text = "Categoria : ${meal!!.strCategory}"
                 binding.tvArea.text = "Local: ${meal.strArea}"

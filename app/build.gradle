@@ -65,6 +65,7 @@ dependencies {
     //viewmodel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
 
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
@@ -92,6 +93,8 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
+
+
 
 
 
